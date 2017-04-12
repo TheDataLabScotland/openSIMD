@@ -1,14 +1,12 @@
 library(readxl)
 library(dplyr)
-library(psych)
 library(ggplot2)
-library(tidyr)
+library(purrr)
 
 source("scripts/utils/normalScores.R")
 source("scripts/utils/helpers.R")
 
 d <- read_excel("data/00510566.xlsx", sheet = 3, na = "*")
-str(d)
 
 normalised_education <- d %>%
   select(Attendance, Attainment, Noquals, NEET, HESA) %>%
@@ -19,26 +17,27 @@ normalised_education <- d %>%
   mutate(HESA       = normalScores(HESA, forwards = FALSE)) %>%
   mutate_all(funs(replaceMissing))
 
-education_weights <- getFAWeights(normalised_education)
+education_weights <- getFAWeights(
+  normalised_education,
+  nfactors = 1,
+  fm = "ml",
+  rotate = "none"
+)
 
-education_score <- normalised_education %>%
-  mutate(Attendance = Attendance * education_weights['Attendance',]) %>%
-  mutate(Attainment = Attainment * education_weights['Attainment',]) %>%
-  mutate(Noquals = Noquals * education_weights['Noquals',]) %>%
-  mutate(NEET = NEET * education_weights['NEET',]) %>%
-  mutate(HESA = HESA * education_weights['HESA',]) %>%
-  rowSums
+education_score <- map2(education_weights, normalised_education, ~ .x * .y) %>% data.frame() %>% rowSums()
 
-education_rank <- rank(-education_score, ties.method = "average")
+education_rank <- rank(-education_score)
+
+########################################################################
 
 # compare to SAS results
-sas <- read_excel("data/education/EDU_DOMAIN.xls")
+sas <- read_excel("data/EDUCATION.xlsx")
 
 results <- data.frame(
   data_zone = d$Data_Zone,
-  sas_edu_score = sas$eduscore,
+  sas_edu_score = sas$eduscr,
   r_edu_score = education_score,
-  sas_edu_rank = sas$edurank,
+  sas_edu_rank = sas$edurnk,
   r_edu_rank = education_rank
 )
 
@@ -51,9 +50,19 @@ gridExtra::grid.arrange(p1, p2)
 dev.off()
 
 differences <- data.frame(
-  diffs = abs(education_rank - sas$edurank)
+  scores = abs(results$r_edu_score - results$sas_edu_score),
+  ranks = abs(results$r_edu_rank - results$sas_edu_rank)
 )
+
 pdf("tests/education_domain/rank_differences.pdf")
-ggplot(filter(differences, diffs < 100), aes(x = diffs)) +
+p1 <- ggplot(filter(differences), aes(x = scores)) +
   geom_histogram(bins = 50)
+p2 <- ggplot(filter(differences), aes(x = ranks)) +
+  geom_histogram(bins = 50)
+gridExtra::grid.arrange(p1, p2)
 dev.off()
+
+d$score_differences <- differences$scores
+d$rank_differences <- differences$ranks
+write.csv(d %>% top_n(10, rank_differences), "tests/education_domain/top_differences.csv")
+

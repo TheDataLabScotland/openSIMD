@@ -3,6 +3,10 @@
 library(readxl)
 library(dplyr)
 
+source("scripts/utils/normalScores.R")
+source("scripts/utils/helpers.R")
+
+d <- read_excel("data/00510566.xlsx", sheet = 3, na = "*")
 noquals <- read_excel("data/NOQUALSDATA.xls")
 
 source("scripts/utils/normalScores.R")
@@ -26,3 +30,13 @@ identical(
   unlist %>%
   cbind(1:16)
 
+normalised_education <- d %>%
+  select(Attendance, Attainment, Noquals, NEET, HESA) %>%
+  mutate(Attendance = normalScores(Attendance, forwards = FALSE)) %>%
+  mutate(Attainment = normalScores(Attainment, forwards = FALSE)) %>%
+  mutate(Noquals    = normalScores(Noquals, forwards = TRUE)) %>%
+  mutate(NEET       = normalScores(NEET, forwards = TRUE)) %>%
+  mutate(HESA       = normalScores(HESA, forwards = FALSE)) %>%
+  mutate_all(funs(replaceMissing))
+
+write.csv(normalised_education, "tests/normalisation/r_edu_normalised.csv")

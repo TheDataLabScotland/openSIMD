@@ -23,9 +23,6 @@ normalScores <- function(
   n <- length(na.omit(v))
   
   rn <- r / (n + 1)
-   
-  rn_mean <- mean(rn, na.rm = TRUE)
-  rn_sd <- sd(rn, na.rm = TRUE)
   
   y <- qnorm(rn, mean = 0, sd = 1, lower.tail = forwards)
   
