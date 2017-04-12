@@ -73,7 +73,7 @@ publictransport_rank <- rank(-publictransport_score)
 drive_exponential <- expoTransform(drive_rank)
 publictransport_exponential <- expoTransform(publictransport_rank)
 access_score <-  (drive_exponential * 2/3) + (publictransport_exponential * 1/3)
-access_rank <- rank(-access_score)
+access_rank <- rank(access_score)
 
 ###
 ### 4, 6, 7. Crime / Income / Employment
