@@ -1,8 +1,8 @@
 library(readxl)
 library(dplyr)
 
-source("scripts/utils/normalScores.R")
 source("scripts/utils/helpers.R")
+source("scripts/utils/normalScores.R")
 
 d <- read_excel("data/00510566.xlsx", sheet = 3, na = "*")
 
@@ -24,7 +24,14 @@ education_score <- combineWeightsAndNorms(education_weights, normalised_educatio
 education_rank <- rank(-education_score)
 
 ###
-### 2. Health
+### 2. Housing
+###
+
+housing_score <- d$overcrowded_rate + d$nocentralheat_rate
+housing_rank <- rank(-housing_score)
+
+###
+### 3. Health
 ###
 
 normalised_health <- d %>%
@@ -37,7 +44,7 @@ health_score <- combineWeightsAndNorms(health_weights, normalised_health)
 health_rank <- rank(-health_score)
 
 ###
-### 3. Access 
+### 4. Access 
 ###    (a) Drive
 ###
 
@@ -69,7 +76,7 @@ access_score <-  (drive_exponential * 2/3) + (publictransport_exponential * 1/3)
 access_rank <- rank(-access_score)
 
 ###
-### 4, 5, 6. Crime / Income / Employment
+### 4, 6, 7. Crime / Income / Employment
 ###
 
 crime_rank <- rank(-d$crime_rate)
@@ -84,6 +91,7 @@ domain_ranks <- data.frame(
   data_zone = d$Data_Zone,
   education = education_rank,
   health = health_rank,
+  housing = housing_rank,
   access = access_rank,
   crime = crime_rank,
   income = income_rank,
@@ -91,4 +99,6 @@ domain_ranks <- data.frame(
 )
 
 write.csv(domain_ranks, "results/domain_ranks.csv", row.names = FALSE)
+
+
 
