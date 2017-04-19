@@ -3,7 +3,7 @@ library(dplyr)
 
 source("scripts/utils/helpers.R")
 
-d <- read_excel("data/00510566.xlsx", sheet = 3, na = "*")
+d <- read_excel("data/SIMD2016_indicators.xlsx", sheet = 3, na = "*")
 domains <- read.csv("results/domain_ranks.csv")
 
 exponential_domains <- domains %>%
@@ -12,7 +12,8 @@ exponential_domains <- domains %>%
 with(exponential_domains, {
   simd_score <<- 
     .28 * income +
-    .28 * health +
+    .28 * employment +
+    .14 * health +
     .14 * education +
     .09 * access +
     .05 * crime +

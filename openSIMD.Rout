@@ -1,0 +1,66 @@
+
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(readxl)
+> library(dplyr)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> 
+> source("scripts/utils/helpers.R")
+> 
+> d <- read_excel("data/SIMD2016_indicators.xlsx", sheet = 3, na = "*")
+> domains <- read.csv("results/domain_ranks.csv")
+> 
+> exponential_domains <- domains %>%
++   mutate_at(vars(-data_zone), funs(expoTransform))
+> 
+> with(exponential_domains, {
++   simd_score <<- 
++     .28 * income +
++     .28 * employment +
++     .14 * health +
++     .14 * education +
++     .09 * access +
++     .05 * crime +
++     .02 * housing
++ })
+> 
+> simd_rank <- rank(simd_score)
+> 
+> simd_results <- data.frame(
++   data_zone = d$Data_Zone,
++   simd_rank = simd_rank
++ )
+> 
+> write.csv(simd_results, "results/openSIMD_ranks.csv", row.names = FALSE)
+> 
+> proc.time()
+   user  system elapsed 
+  0.769   0.088   0.853 

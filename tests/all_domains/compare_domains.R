@@ -3,14 +3,13 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-sas_results <- read_excel("data/SIMD16_ranks.xlsx", sheet = 2)
+sas_results <- read_excel("data/updated SIMD and domain ranks.xlsx", sheet = 1)
 r_results <- read.csv("results/domain_ranks.csv")
 
 sas_results <- sas_results %>%
-  select(-Intermediate_Zone, -Council_area, -Total_population, 
-         -Working_age_population_revised, -Overall_SIMD16_rank)
+  select(-IZ, -LA, -pop, -wapop, -SIMD)
 names(sas_results) <- c("data_zone", "income", "employment", "health", 
-                        "education", "housing", "access", "crime")
+                        "education", "access", "crime", "housing")
 
 sas_results$source <- "sas"
 r_results$source <- "r"

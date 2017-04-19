@@ -1,0 +1,61 @@
+
+R version 3.3.1 (2016-06-21) -- "Bug in Your Hair"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> library(readxl)
+> library(dplyr)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> library(ggplot2)
+Warning message:
+package ‘ggplot2’ was built under R version 3.3.2 
+> 
+> sas_results <- read_excel("data/updated SIMD and domain ranks.xlsx", sheet = 1) %>%
++   select(DZ, SIMD)
+> r_results <- read.csv("results/openSIMD_ranks.csv")
+> 
+> names(sas_results) <- c("data_zone", "sas")
+> names(r_results) <- c("data_zone", "r")
+> 
+> results <- left_join(sas_results, r_results)
+Joining, by = "data_zone"
+Warning message:
+In left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y) :
+  joining factor and character vector, coercing into character vector
+> 
+> pdf("tests/simd_comparison/comparing_simd.pdf")
+> ggplot(results, aes(x = sas, y = r)) +
++   geom_point()
+> dev.off()
+null device 
+          1 
+> 
+> proc.time()
+   user  system elapsed 
+  0.922   0.059   0.975 
