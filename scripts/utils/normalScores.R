@@ -1,3 +1,5 @@
+### DEPRACATED
+
 ### normalScores
 ### A function to calculate the normal scores as in SIMD 16 SAS code
 ### The function is defined as follows:

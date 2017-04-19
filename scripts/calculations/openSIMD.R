@@ -19,11 +19,11 @@ with(exponential_domains, {
     .02 * housing
 })
 
-simd_rank <- rank(-simd_score)
+simd_rank <- rank(simd_score)
 
 simd_results <- data.frame(
   data_zone = d$Data_Zone,
   simd_rank = simd_rank
 )
 
-write.csv(simd_results, "results/openSIMD_ranks.csv")
+write.csv(simd_results, "results/openSIMD_ranks.csv", row.names = FALSE)

@@ -2,7 +2,6 @@ library(readxl)
 library(dplyr)
 
 source("scripts/utils/helpers.R")
-source("scripts/utils/normalScores.R")
 
 d <- read_excel("data/00510566.xlsx", sheet = 3, na = "*")
 
@@ -55,7 +54,7 @@ normalised_drive <- d %>%
 
 drive_weights <- getFAWeights(normalised_drive)
 drive_score <- combineWeightsAndNorms(drive_weights, normalised_drive)
-drive_rank <- rank(-drive_score)
+drive_rank <- rank(drive_score)
 
 ###    (b) Public Transport
 
@@ -66,14 +65,14 @@ normalised_publictransport <- d %>%
 
 publictransport_weights <- getFAWeights(normalised_publictransport)
 publictransport_score <- combineWeightsAndNorms(publictransport_weights, normalised_publictransport)
-publictransport_rank <- rank(-publictransport_score)
+publictransport_rank <- rank(publictransport_score)
 
 ###    (c) Combined
 
 drive_exponential <- expoTransform(drive_rank)
 publictransport_exponential <- expoTransform(publictransport_rank)
 access_score <-  (drive_exponential * 2/3) + (publictransport_exponential * 1/3)
-access_rank <- rank(access_score)
+access_rank <- rank(-access_score)
 
 ###
 ### 4, 6, 7. Crime / Income / Employment
@@ -84,7 +83,7 @@ income_rank <- rank(-d$Income_rate)
 employment_rank <- rank(-d$Employment_rate)
 
 ###
-### Export Domains
+### Collect and reassign ranks
 ###
 
 domain_ranks <- data.frame(
@@ -98,7 +97,16 @@ domain_ranks <- data.frame(
   employment = employment_rank
 )
 
+domain_ranks <- domain_ranks %>%
+  reassignRank("crime", "S01010206", "max") %>%
+  reassignRank("crime", "S01010227", "max", offset = 1) %>%
+  reassignRank("income", "S01010206", "max") %>%
+  reassignRank("income", "S01010227", "max", offset = 1) %>%
+  reassignRank("employment", "S01010206", "max") %>%
+  reassignRank("employment", "S01010227", "max")
+
+###
+### Export Domains
+###
+
 write.csv(domain_ranks, "results/domain_ranks.csv", row.names = FALSE)
-
-
-
