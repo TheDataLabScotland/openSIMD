@@ -3,7 +3,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-sas_results <- read_excel("data/updated SIMD and domain ranks.xlsx", sheet = 1)
+sas_results <- read_excel("data/SAS SIMD and domain ranks.xlsx", sheet = 1)
 r_results <- read.csv("results/domain_ranks.csv")
 
 sas_results <- sas_results %>%

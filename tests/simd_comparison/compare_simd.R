@@ -2,7 +2,7 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 
-sas_results <- read_excel("data/updated SIMD and domain ranks.xlsx", sheet = 1) %>%
+sas_results <- read_excel("data/SAS SIMD and domain ranks.xlsx", sheet = 1) %>%
   select(DZ, SIMD)
 r_results <- read.csv("results/openSIMD_ranks.csv")
 

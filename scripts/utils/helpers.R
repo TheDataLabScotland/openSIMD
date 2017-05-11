@@ -5,7 +5,7 @@
 ### normalScores
 ### A function to calculate the normal scores as in SIMD 16 SAS code
 ### The function is defined as follows:
-###   yi = 1/theta * (ri) / (n + 1)
+###   yi = 1/theta ((ri) / (n + 1))
 ###     where:
 ###       theta = the cumulative normal (probit) function
 ###       ri = the rank of the i'th observation
@@ -51,7 +51,7 @@ replaceMissing <- function(v) replace(v, is.na(v) | v == Inf | v == -Inf, 0)
 ### combining the normalised indicator scores.
 ### The function takes a data frame, assumes that all variables are being processed
 ### in factor analysis and returns a list where each element is a numeric value,
-### the weight corresponding to that collumn in the data.
+### the weight corresponding to that column in the data.
 
 getFAWeights <- function(dat, ...) {
   
@@ -104,24 +104,24 @@ expoTransform <- function(ranks) {
 ### reassignRank
 ### A function to make manual reassignments of ranks to individual data zones, can 
 ### be used when there are strange exceptions such as empty data zones. The function
-### needs a data.frame of ranks containing a collumn named 'data_zone'. The function 
+### needs a data.frame of ranks containing a column named 'data_zone'. The function 
 ### will take that data.frame change the rank of the indicator in question (with an
 ### optional offset) and then re-rank.
 ### The function returns the corrected data.frame.
 
 # reassign ranks to individual data zones
-reassignRank <- function(data, indicator, data_zone, end = "max", offset = 0) {
+reassignRank <- function(data, domain, data_zone, end = "max", offset = 0) {
   
   if(end == "max") {
-    data[data$data_zone == data_zone, indicator] <- 
-      max(data[, indicator], na.rm = TRUE) - offset
+    data[data$data_zone == data_zone, domain] <- 
+      max(data[, domain], na.rm = TRUE) - (offset * 0.1)
   }else
     if(end == "min") {
-      data[data$data_zone == data_zone, indicator] <- 
-        min(data[, indicator], na.rm = TRUE) + offset
+      data[data$data_zone == data_zone, domain] <- 
+        min(data[, domain], na.rm = TRUE) + (offset * 0.1)
     }
   
-  data[, indicator] <- rank(data[, indicator])
+  data[, domain] <- rank(data[, domain])
   
   return(data)
 }

@@ -1,8 +1,9 @@
 library(readxl)
 library(dplyr)
+setwd("/openSIMD/openSIMD_analysis") # if running from parent dir
 source("scripts/utils/helpers.R")
-indicators <- read_excel("data/SIMD2016_indicators.xlsx", sheet = 3, na = "*")
-ranks <- read_excel("data/SIMD2016_ranks.xlsx", sheet = 2, na = "*")
+indicators <- read_excel("data/SIMD16 indicator data.xlsx", sheet = 3, na = "*")
+ranks <- read_excel("data/SIMD16 ranks and domain ranks.xlsx", sheet = 2, na = "*")
 
 ###
 ### 1. Education
@@ -70,14 +71,14 @@ publictransport_rank <- rank(publictransport_score)
 
 drive_exponential <- expoTransform(drive_rank)
 publictransport_exponential <- expoTransform(publictransport_rank)
-access_score <-  (drive_exponential * 2/3) + (publictransport_exponential * 1/3)
+access_score <-  (drive_exponential * 2) + (publictransport_exponential * 1)
 access_rank <- rank(-access_score)
 
 ###
 ### 4, 6, 7. Crime / Income / Employment
 ###
 
-crime_rank <- rank(-indicators$crime_rate)
+crime_rank <- rank(ranks$Crime_domain_2016_rank)
 income_rank <- rank(ranks$Income_domain_2016_rank)
 employment_rank <- rank(ranks$Employment_domain_2016_rank)
 
@@ -96,16 +97,17 @@ domain_ranks <- data.frame(
   employment = employment_rank
 )
 
-domain_ranks <- domain_ranks %>%
-  reassignRank("crime", "S01010206", "max") %>%
-  reassignRank("crime", "S01010227", "max", offset = 1) %>%
-  reassignRank("income", "S01010206", "max") %>%
-  reassignRank("income", "S01010227", "max", offset = 1) %>%
-  reassignRank("employment", "S01010206", "max") %>%
-  reassignRank("employment", "S01010227", "max")
+# domain_ranks <- domain_ranks %>%
+#  reassignRank("crime", "S01010206", "max") %>%
+#  reassignRank("crime", "S01010227", "max", offset = 1) %>%
+#  reassignRank("income", "S01010206", "max") %>%
+#  reassignRank("income", "S01010227", "max", offset = 1) %>%
+#  reassignRank("employment", "S01010206", "max") %>%
+#  reassignRank("employment", "S01010227", "max")
 
 ###
 ### Export Domains
 ###
 
 write.csv(domain_ranks, "results/domain_ranks.csv", row.names = FALSE)
+
