@@ -1,6 +1,6 @@
 library(readxl)
 library(dplyr)
-setwd("/openSIMD/openSIMD_analysis") # if running from parent dir
+setwd("openSIMD_analysis") # if running from parent dir
 source("scripts/utils/helpers.R")
 indicators <- read_excel("data/SIMD16 indicator data.xlsx", sheet = 3, na = "*")
 ranks <- read_excel("data/SIMD16 ranks and domain ranks.xlsx", sheet = 2, na = "*")

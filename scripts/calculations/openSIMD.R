@@ -1,5 +1,5 @@
 library(dplyr)
-setwd("/openSIMD/openSIMD_analysis") # if running from parent dir
+setwd("openSIMD_analysis") # if running from parent dir
 source("scripts/utils/helpers.R")
 domains <- read.csv("results/domain_ranks.csv")
 
