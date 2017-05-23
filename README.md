@@ -4,14 +4,10 @@ An open data / open government project. Contained here are the input data and R 
 
 ## Links
 
-<<<<<<< HEAD
 openSIMD Blog - [https://blogs.gov.scot/statistics/2017/05/23/opensimd/](https://blogs.gov.scot/statistics/2017/05/23/opensimd/)
 
+openSIMD Documentation - [https://thedatalabscotland.github.io/openSIMD_site/](https://thedatalabscotland.github.io/openSIMD_site/)
+
 openSIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD](http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD)
 
 Scottish Government SIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD](http://www.gov.scot/Topics/Statistics/SIMD)
-=======
-Scottish Government SIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD](http://www.gov.scot/Topics/Statistics/SIMD)
-
-openSIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD](http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD)
->>>>>>> 83524ddbd1510fdc099ae92be16e05215f18589d
