@@ -11,3 +11,7 @@ openSIMD Documentation - [https://thedatalabscotland.github.io/openSIMD_site/](h
 openSIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD](http://www.gov.scot/Topics/Statistics/SIMD/analysis/openSIMD)
 
 Scottish Government SIMD Website - [http://www.gov.scot/Topics/Statistics/SIMD](http://www.gov.scot/Topics/Statistics/SIMD)
+
+## News
+
+There is now a draft R package available here: [https://github.com/TheDataLabScotland/simdr](https://github.com/TheDataLabScotland/simdr)
